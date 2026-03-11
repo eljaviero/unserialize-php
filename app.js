@@ -479,30 +479,63 @@ async function exportPdfTree() {
     treeElement.style.maxHeight = "none";
     treeElement.style.overflow = "visible";
 
+    const captureScale = 2;
+    const treeRect = treeElement.getBoundingClientRect();
+    const visibleLineBottomsPx = Array.from(treeElement.querySelectorAll(".tree-line"))
+      .map((node) => Math.round((node.getBoundingClientRect().bottom - treeRect.top) * captureScale))
+      .filter((value, index, arr) => value > 0 && (index === 0 || value !== arr[index - 1]));
+
     const canvas = await window.html2canvas(treeElement, {
       backgroundColor: "#fcfcfd",
-      scale: 2,
+      scale: captureScale,
       useCORS: true,
     });
 
-    const image = canvas.toDataURL("image/png");
     const doc = new window.jspdf.jsPDF({ orientation: "p", unit: "pt", format: "a4" });
-    const margin = 24;
+    const marginTop = 24;
+    const marginBottom = 24;
+    const marginHorizontal = 24;
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-    const contentWidth = pageWidth - margin * 2;
-    const contentHeight = (canvas.height * contentWidth) / canvas.width;
-    const printableHeight = pageHeight - margin * 2;
+    const contentWidth = pageWidth - marginHorizontal * 2;
+    const printableHeight = pageHeight - marginTop - marginBottom;
+    const pageSliceHeightPx = Math.floor((printableHeight * canvas.width) / contentWidth);
 
-    let renderedHeight = 0;
-    while (renderedHeight < contentHeight) {
-      if (renderedHeight > 0) {
+    // Prefer page breaks at line boundaries to avoid cutting text.
+    const minSliceHeightPx = Math.max(80, Math.floor(pageSliceHeightPx * 0.35));
+
+    let offsetY = 0;
+    while (offsetY < canvas.height) {
+      if (offsetY > 0) {
         doc.addPage();
       }
 
-      const y = margin - renderedHeight;
-      doc.addImage(image, "PNG", margin, y, contentWidth, contentHeight);
-      renderedHeight += printableHeight;
+      let sliceHeight = Math.min(pageSliceHeightPx, canvas.height - offsetY);
+      if (offsetY + sliceHeight < canvas.height && visibleLineBottomsPx.length > 0) {
+        const targetEnd = offsetY + sliceHeight;
+        const breakAt = [...visibleLineBottomsPx]
+          .reverse()
+          .find((value) => value <= targetEnd && value - offsetY >= minSliceHeightPx);
+
+        if (breakAt) {
+          sliceHeight = breakAt - offsetY;
+        }
+      }
+      const pageCanvas = document.createElement("canvas");
+      pageCanvas.width = canvas.width;
+      pageCanvas.height = sliceHeight;
+
+      const pageCtx = pageCanvas.getContext("2d");
+      if (!pageCtx) {
+        throw new Error("No se pudo preparar una página intermedia para el PDF.");
+      }
+
+      pageCtx.drawImage(canvas, 0, offsetY, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
+
+      const sliceHeightPt = (sliceHeight * contentWidth) / canvas.width;
+      doc.addImage(pageCanvas.toDataURL("image/png"), "PNG", marginHorizontal, marginTop, contentWidth, sliceHeightPt);
+
+      offsetY += sliceHeight;
     }
 
     doc.save("serialized-array-tree.pdf");
