@@ -1,20 +1,26 @@
 # PHP Serialized Array Studio
 
-Aplicacion web ligera para convertir contenido `serialize()` de PHP a una estructura clara, editable y exportable.
+Aplicación web ligera para convertir contenido `serialize()` de PHP a una estructura clara, editable y exportable.
 
-## Que hace
+## Qué hace
 
 - Parsea texto serializado de PHP a objeto/array usable.
-- Muestra un arbol desplegable para inspeccionar datos anidados.
+- Muestra un árbol desplegable para inspeccionar datos anidados.
 - Permite editar el resultado en JSON y aplicar cambios.
 - Exporta el contenido a:
   - JSON
   - Markdown
   - YAML
-  - TXT (vista arbol)
+  - TXT (vista árbol)
   - PDF (captura del visor)
   - PHP serializado
   - Array PHP (`$data = [...]`)
+
+## Demo online
+
+Puedes ver un ejemplo funcionando en:
+
+- https://eljaviero.com/utils/unserialize-php/
 
 ## Interfaz
 
@@ -22,15 +28,15 @@ La app tiene 4 zonas principales:
 
 1. Entrada de texto serializado (con carga de archivo).
 2. Editor JSON.
-3. Vista arbol desplegable.
-4. Panel de exportacion.
+3. Vista árbol desplegable.
+4. Panel de exportación.
 
-Tambien muestra metricas de:
+También muestra métricas de:
 
 - Entradas
 - Profundidad
 
-## Uso rapido
+## Uso rápido
 
 1. Abre [index.html](./index.html) en el navegador.
 2. Pega tu string serializado o carga un archivo.
@@ -53,7 +59,7 @@ Tambien muestra metricas de:
 
 ## Seguridad CDN
 
-Las librerias externas cargadas por CDN incluyen `integrity` (SRI) y `crossorigin="anonymous"` para reducir riesgo de manipulacion:
+Las librerías externas cargadas por CDN incluyen `integrity` (SRI) y `crossorigin="anonymous"` para reducir riesgo de manipulación:
 
 - Bootstrap CSS
 - jQuery
@@ -64,16 +70,18 @@ Las librerias externas cargadas por CDN incluyen `integrity` (SRI) y `crossorigi
 
 ```text
 .
-|- index.html   # Estructura de la app
-|- style.css    # Estilos
-|- app.js       # Parser, render, eventos y exportacion
+|- index.html     # Estructura de la app
+|- style.css      # Estilos
+|- app.js         # Parser, render, eventos y exportación
+|- constants.js   # Configuración central (APP_CONFIG)
+|- README.md      # Documentación del proyecto
 ```
 
-## Notas tecnicas
+## Notas técnicas
 
 - El parser contempla longitudes en bytes UTF-8 para strings serializadas.
 - El proyecto es front-end puro (sin build, sin dependencias locales).
-- Codificacion recomendada de archivos: UTF-8.
+- Codificación recomendada de archivos: UTF-8.
 
 ## Licencia
 
