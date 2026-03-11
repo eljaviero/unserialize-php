@@ -1,4 +1,4 @@
-const sampleInput = 'a:9:{s:2:"id";i:1254;s:6:"titulo";s:19:"Artículo de prueba";s:5:"autor";a:3:{s:2:"id";i:87;s:6:"nombre";s:11:"Juan Pérez";s:5:"email";s:16:"juan@example.com";}s:4:"tags";a:3:{i:0;s:3:"php";i:1;s:5:"mysql";i:2;s:7:"backend";}s:9:"publicado";b:1;s:17:"fecha_publicacion";s:19:"2025-12-10 18:30:00";s:12:"estadisticas";a:3:{s:7:"visitas";i:1543;s:5:"likes";i:230;s:11:"compartidos";i:54;}s:11:"comentarios";a:2:{i:0;a:3:{s:7:"usuario";s:12:"ana de armas";s:5:"texto";s:18:"Muy buen artículo";s:5:"fecha";s:10:"2025-12-11";}i:1;a:3:{s:7:"usuario";s:5:"pedro";s:5:"texto";s:19:"Gracias por la info";s:5:"fecha";s:10:"2025-12-12";}}s:8:"metadata";N;}';
+const sampleInput = 'a:9:{s:2:"id";i:1254;s:6:"titulo";s:19:"Artículo de prueba";s:5:"autor";a:3:{s:2:"id";i:87;s:6:"nombre";s:11:"Juan Pérez";s:5:"email";s:16:"juan@example.com";}s:4:"tags";a:3:{i:0;s:3:"php";i:1;s:5:"mysql";i:2;s:7:"backend";}s:9:"publicado";b:1;s:17:"fecha_publicacion";s:19:"2025-12-10 18:30:00";s:12:"estadisticas";a:3:{s:7:"visitas";i:1543;s:5:"likes";i:230;s:11:"compartidos";i:54;}s:11:"comentarios";a:2:{i:0;a:3:{s:7:"usuario";s:11:"Ana García";s:5:"texto";s:18:"Muy buen artículo";s:5:"fecha";s:10:"2025-12-11";}i:1;a:3:{s:7:"usuario";s:13:"Pedro Méndez";s:5:"texto";s:19:"Gracias por la info";s:5:"fecha";s:10:"2025-12-12";}}s:8:"metadata";N;}';
 const encoder = new TextEncoder();
 
 const state = {
@@ -569,6 +569,7 @@ function handleApplyEditor() {
   try {
     const parsed = JSON.parse($jsonEditor.val());
     setData(parsed, "Cambios del JSON aplicados.");
+    $serializedInput.val(serializePhp(parsed));
   } catch (error) {
     setStatus(`JSON inválido: ${error.message}`, "error");
   }
