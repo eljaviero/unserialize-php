@@ -647,6 +647,7 @@ function init() {
   bindEvents();
   $("#copyright-year").text(String(new Date().getFullYear()));
   applyFooterConstants();
+  $serializedInput.attr("placeholder", sampleInput);
   $serializedInput.val(sampleInput);
   handleParse();
 }
