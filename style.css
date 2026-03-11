@@ -1,0 +1,217 @@
+﻿:root {
+  --app-bg: #f4f5f7;
+  --panel-bg: #ffffff;
+  --border: #d8dde3;
+  --text: #1f2328;
+  --muted: #6c757d;
+  --tree-key: #0f5132;
+  --tree-number: #1d4ed8;
+  --tree-string: #9a3412;
+  --tree-boolean: #7c3aed;
+}
+
+html,
+body {
+  background: var(--app-bg);
+  color: var(--text);
+  font-size: 14px;
+}
+
+body,
+.form-control,
+.btn,
+.form-label,
+.card,
+summary,
+textarea {
+  font-size: 14px;
+}
+
+.card {
+  background: var(--panel-bg);
+}
+
+.app-title {
+  font-size: clamp(1.2rem, 2vw, 1.7rem);
+  line-height: 1.3;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.app-subtitle {
+  max-width: 100ch;
+  font-size: 0.95rem;
+}
+
+.panel-kicker,
+.panel-label,
+.metric-label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.68rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.panel-title {
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.metric-box {
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  min-width: 120px;
+  padding: 0.5rem 0.7rem;
+  background: #fafbfc;
+}
+
+.metric-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.app-textarea {
+  height: 450px;
+  min-height: 450px;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+}
+
+.status-message {
+  min-height: 1.2rem;
+  font-size: 0.85rem;
+}
+
+.status-message.success {
+  color: #0f766e;
+}
+
+.status-message.error {
+  color: #b91c1c;
+}
+
+.tree-view {
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  background: #fcfcfd;
+  padding: 0.6rem 0.8rem;
+  height: 450px;
+  min-height: 450px;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.tree-empty {
+  color: var(--muted);
+  padding: 0.4rem 0;
+}
+
+.tree-node {
+  margin: 0.1rem 0;
+}
+
+.tree-node summary {
+  list-style: none;
+  cursor: pointer;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.tree-node summary::-webkit-details-marker {
+  display: none;
+}
+
+.tree-node summary::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: #6b7280;
+}
+
+.tree-node[open] > summary::before {
+  content: "▾";
+}
+
+.tree-children {
+  margin-left: 1.15rem;
+  border-left: 1px dashed #d1d5db;
+  padding-left: 0.6rem;
+}
+
+.tree-line {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.tree-key {
+  color: var(--tree-key);
+}
+
+.tree-meta {
+  color: #6b7280;
+}
+
+.tree-string {
+  color: var(--tree-string);
+}
+
+.tree-number {
+  color: var(--tree-number);
+}
+
+.tree-boolean,
+.tree-null {
+  color: var(--tree-boolean);
+}
+
+@media (max-width: 768px) {
+  html,
+  body,
+  .form-control,
+  .btn,
+  .form-label,
+  .card,
+  summary,
+  textarea {
+    font-size: 13px;
+  }
+
+  .app-title {
+    font-size: 1.1rem;
+  }
+}
+
+
+.app-textarea::placeholder {
+  color: #b7bec7;
+  opacity: 1;
+}
+
+
+
+
+#serialized-input::placeholder {
+  color: #e1e5ea;
+  opacity: 1;
+}
+
+.app-footer {
+  font-size: 12px;
+}
+
+.app-footer a {
+  color: #6c757d;
+  text-decoration: none;
+}
+
+.app-footer a:hover {
+  text-decoration: underline;
+}
+
+
+
