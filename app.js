@@ -479,9 +479,15 @@ async function exportPdfTree() {
     treeElement.style.maxHeight = "none";
     treeElement.style.overflow = "visible";
 
+    const captureScale = 2;
+    const treeRect = treeElement.getBoundingClientRect();
+    const visibleLineBottomsPx = Array.from(treeElement.querySelectorAll(".tree-line"))
+      .map((node) => Math.round((node.getBoundingClientRect().bottom - treeRect.top) * captureScale))
+      .filter((value, index, arr) => value > 0 && (index === 0 || value !== arr[index - 1]));
+
     const canvas = await window.html2canvas(treeElement, {
       backgroundColor: "#fcfcfd",
-      scale: 2,
+      scale: captureScale,
       useCORS: true,
     });
 
@@ -495,8 +501,8 @@ async function exportPdfTree() {
     const printableHeight = pageHeight - marginTop - marginBottom;
     const pageSliceHeightPx = Math.floor((printableHeight * canvas.width) / contentWidth);
 
-    // Small overlap avoids visible cuts across page boundaries.
-    const overlapPx = Math.max(8, Math.floor(pageSliceHeightPx * 0.02));
+    // Prefer page breaks at line boundaries to avoid cutting text.
+    const minSliceHeightPx = Math.max(80, Math.floor(pageSliceHeightPx * 0.35));
 
     let offsetY = 0;
     while (offsetY < canvas.height) {
@@ -504,7 +510,17 @@ async function exportPdfTree() {
         doc.addPage();
       }
 
-      const sliceHeight = Math.min(pageSliceHeightPx, canvas.height - offsetY);
+      let sliceHeight = Math.min(pageSliceHeightPx, canvas.height - offsetY);
+      if (offsetY + sliceHeight < canvas.height && visibleLineBottomsPx.length > 0) {
+        const targetEnd = offsetY + sliceHeight;
+        const breakAt = [...visibleLineBottomsPx]
+          .reverse()
+          .find((value) => value <= targetEnd && value - offsetY >= minSliceHeightPx);
+
+        if (breakAt) {
+          sliceHeight = breakAt - offsetY;
+        }
+      }
       const pageCanvas = document.createElement("canvas");
       pageCanvas.width = canvas.width;
       pageCanvas.height = sliceHeight;
@@ -519,11 +535,7 @@ async function exportPdfTree() {
       const sliceHeightPt = (sliceHeight * contentWidth) / canvas.width;
       doc.addImage(pageCanvas.toDataURL("image/png"), "PNG", marginHorizontal, marginTop, contentWidth, sliceHeightPt);
 
-      if (offsetY + sliceHeight >= canvas.height) {
-        offsetY += sliceHeight;
-      } else {
-        offsetY += sliceHeight - overlapPx;
-      }
+      offsetY += sliceHeight;
     }
 
     doc.save("serialized-array-tree.pdf");
