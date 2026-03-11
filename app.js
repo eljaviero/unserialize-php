@@ -485,24 +485,45 @@ async function exportPdfTree() {
       useCORS: true,
     });
 
-    const image = canvas.toDataURL("image/png");
     const doc = new window.jspdf.jsPDF({ orientation: "p", unit: "pt", format: "a4" });
-    const margin = 24;
+    const marginTop = 24;
+    const marginBottom = 24;
+    const marginHorizontal = 24;
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-    const contentWidth = pageWidth - margin * 2;
-    const contentHeight = (canvas.height * contentWidth) / canvas.width;
-    const printableHeight = pageHeight - margin * 2;
+    const contentWidth = pageWidth - marginHorizontal * 2;
+    const printableHeight = pageHeight - marginTop - marginBottom;
+    const pageSliceHeightPx = Math.floor((printableHeight * canvas.width) / contentWidth);
 
-    let renderedHeight = 0;
-    while (renderedHeight < contentHeight) {
-      if (renderedHeight > 0) {
+    // Small overlap avoids visible cuts across page boundaries.
+    const overlapPx = Math.max(8, Math.floor(pageSliceHeightPx * 0.02));
+
+    let offsetY = 0;
+    while (offsetY < canvas.height) {
+      if (offsetY > 0) {
         doc.addPage();
       }
 
-      const y = margin - renderedHeight;
-      doc.addImage(image, "PNG", margin, y, contentWidth, contentHeight);
-      renderedHeight += printableHeight;
+      const sliceHeight = Math.min(pageSliceHeightPx, canvas.height - offsetY);
+      const pageCanvas = document.createElement("canvas");
+      pageCanvas.width = canvas.width;
+      pageCanvas.height = sliceHeight;
+
+      const pageCtx = pageCanvas.getContext("2d");
+      if (!pageCtx) {
+        throw new Error("No se pudo preparar una página intermedia para el PDF.");
+      }
+
+      pageCtx.drawImage(canvas, 0, offsetY, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
+
+      const sliceHeightPt = (sliceHeight * contentWidth) / canvas.width;
+      doc.addImage(pageCanvas.toDataURL("image/png"), "PNG", marginHorizontal, marginTop, contentWidth, sliceHeightPt);
+
+      if (offsetY + sliceHeight >= canvas.height) {
+        offsetY += sliceHeight;
+      } else {
+        offsetY += sliceHeight - overlapPx;
+      }
     }
 
     doc.save("serialized-array-tree.pdf");
