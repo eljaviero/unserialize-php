@@ -12,3 +12,6 @@ Thumbs.db
 # Temp
 *.tmp
 *.temp
+
+# Local plugin config
+sftp-config.json
