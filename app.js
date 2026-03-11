@@ -621,6 +621,20 @@ function bindEvents() {
   $("[data-export]").on("click", function onExportClick() {
     exportCurrent($(this).data("export"));
   });
+
+  $serializedInput.on("keydown", (event) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+      event.preventDefault();
+      handleParse();
+    }
+  });
+
+  $jsonEditor.on("keydown", (event) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+      event.preventDefault();
+      handleApplyEditor();
+    }
+  });
 }
 
 function init() {

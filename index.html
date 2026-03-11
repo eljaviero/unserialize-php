@@ -1,4 +1,4 @@
-Ôªø<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -19,8 +19,8 @@
           <p class="text-uppercase text-secondary small fw-semibold mb-2">PHP Serialized Array Studio</p>
           <h1 class="app-title mb-2">Convierte arrays serializados en una estructura clara y desplegable.</h1>
           <p class="text-secondary mb-3 mb-md-4 app-subtitle">
-            Pega o carga un archivo en UTF-8, convi√©rtelo, ed√≠talo en JSON y visual√≠zalo como √°rbol de texto desplegable.
-            Despu√©s exporta a JSON, Markdown, YAML, TXT, PDF o de vuelta a serializado PHP.
+            Pega o carga un archivo en UTF-8, conviÈrtelo, edÌtalo en JSON y visualÌzalo como ·rbol de texto desplegable.
+            DespuÈs exporta a JSON, Markdown, YAML, TXT, PDF o de vuelta a serializado PHP.
           </p>
           <div class="d-flex justify-content-end gap-2 flex-wrap">
             <div class="metric-box">
@@ -45,7 +45,7 @@
                   <h2 class="panel-title mb-0">Array serializado</h2>
                 </div>
                 <div class="d-flex gap-2 flex-wrap">
-                  <input id="file-input" type="file" class="d-none" />
+                  <input id="file-input" type="file" class="d-none" accept=".txt,.php,.ser,.log" />
                   <button id="load-file" class="btn btn-outline-secondary btn-sm">Cargar archivo</button>
                   <button id="clear-all" class="btn btn-outline-secondary btn-sm">Borrar</button>
                   <button id="parse-input" class="btn btn-dark btn-sm">Convertir</button>
@@ -56,7 +56,7 @@
                 id="serialized-input"
                 class="form-control app-textarea"
                 spellcheck="false"
-                placeholder='a:9:{s:2:&quot;id&quot;;i:1254;s:6:&quot;titulo&quot;;s:19:&quot;Art√≠culo de prueba&quot;;s:5:&quot;autor&quot;;a:3:{s:2:&quot;id&quot;;i:87;s:6:&quot;nombre&quot;;s:11:&quot;Juan P√©rez&quot;;s:5:&quot;email&quot;;s:16:&quot;juan@example.com&quot;;}s:4:&quot;tags&quot;;a:3:{i:0;s:3:&quot;php&quot;;i:1;s:5:&quot;mysql&quot;;i:2;s:7:&quot;backend&quot;;}s:9:&quot;publicado&quot;;b:1;s:17:&quot;fecha_publicacion&quot;;s:19:&quot;2025-12-10 18:30:00&quot;;s:12:&quot;estadisticas&quot;;a:3:{s:7:&quot;visitas&quot;;i:1543;s:5:&quot;likes&quot;;i:230;s:11:&quot;compartidos&quot;;i:54;}s:11:&quot;comentarios&quot;;a:2:{i:0;a:3:{s:7:&quot;usuario&quot;;s:12:&quot;ana de armas&quot;;s:5:&quot;texto&quot;;s:18:&quot;Muy buen art√≠culo&quot;;s:5:&quot;fecha&quot;;s:10:&quot;2025-12-11&quot;;}i:1;a:3:{s:7:&quot;usuario&quot;;s:5:&quot;pedro&quot;;s:5:&quot;texto&quot;;s:19:&quot;Gracias por la info&quot;;s:5:&quot;fecha&quot;;s:10:&quot;2025-12-12&quot;;}}s:8:&quot;metadata&quot;;N;}'
+                placeholder='a:9:{s:2:&quot;id&quot;;i:1254;s:6:&quot;titulo&quot;;s:19:&quot;ArtÌculo de prueba&quot;;s:5:&quot;autor&quot;;a:3:{s:2:&quot;id&quot;;i:87;s:6:&quot;nombre&quot;;s:11:&quot;Juan PÈrez&quot;;s:5:&quot;email&quot;;s:16:&quot;juan@example.com&quot;;}s:4:&quot;tags&quot;;a:3:{i:0;s:3:&quot;php&quot;;i:1;s:5:&quot;mysql&quot;;i:2;s:7:&quot;backend&quot;;}s:9:&quot;publicado&quot;;b:1;s:17:&quot;fecha_publicacion&quot;;s:19:&quot;2025-12-10 18:30:00&quot;;s:12:&quot;estadisticas&quot;;a:3:{s:7:&quot;visitas&quot;;i:1543;s:5:&quot;likes&quot;;i:230;s:11:&quot;compartidos&quot;;i:54;}s:11:&quot;comentarios&quot;;a:2:{i:0;a:3:{s:7:&quot;usuario&quot;;s:12:&quot;ana de armas&quot;;s:5:&quot;texto&quot;;s:18:&quot;Muy buen artÌculo&quot;;s:5:&quot;fecha&quot;;s:10:&quot;2025-12-11&quot;;}i:1;a:3:{s:7:&quot;usuario&quot;;s:5:&quot;pedro&quot;;s:5:&quot;texto&quot;;s:19:&quot;Gracias por la info&quot;;s:5:&quot;fecha&quot;;s:10:&quot;2025-12-12&quot;;}}s:8:&quot;metadata&quot;;N;}'
               ></textarea>
               <div id="status-message" class="status-message mt-2" aria-live="polite"></div>
             </div>
@@ -76,7 +76,7 @@
                   <button id="apply-editor" class="btn btn-dark btn-sm">Aplicar cambios</button>
                 </div>
               </div>
-              <label class="form-label panel-label" for="json-editor">Edici√≥n avanzada</label>
+              <label class="form-label panel-label" for="json-editor">EdiciÛn avanzada</label>
               <textarea id="json-editor" class="form-control app-textarea" spellcheck="false" placeholder="{ }"></textarea>
             </div>
           </article>
@@ -86,7 +86,7 @@
           <article class="card shadow-sm border-0 h-100">
             <div class="card-body p-3 p-md-4">
               <p class="panel-kicker mb-1">Vista</p>
-              <h2 class="panel-title mb-3">√Årbol desplegable</h2>
+              <h2 class="panel-title mb-3">¡rbol desplegable</h2>
               <div id="tree-view" class="tree-view" aria-live="polite"></div>
             </div>
           </article>
@@ -95,7 +95,7 @@
         <div class="col-12 col-lg-4">
           <article class="card shadow-sm border-0 h-100">
             <div class="card-body p-3 p-md-4 d-flex flex-column">
-              <p class="panel-kicker mb-1">Exportaci√≥n</p>
+              <p class="panel-kicker mb-1">ExportaciÛn</p>
               <h2 class="panel-title mb-3">Descargas</h2>
               <div class="d-grid gap-2">
                 <button class="btn btn-outline-secondary btn-sm text-start" data-export="json">JSON</button>
@@ -112,7 +112,7 @@
       </section>
     </main>
 
-    <footer class="app-footer text-center text-secondary py-3">Copyright ¬© <span id="copyright-year"></span> by Javiero - <a href="https://eljaviero.com" target="_blank" rel="noopener">eljaviero.com</a></footer>
+    <footer class="app-footer text-center text-secondary py-3">Copyright © <span id="copyright-year"></span> by Javiero - <a href="https://eljaviero.com" target="_blank" rel="noopener">eljaviero.com</a></footer>
 
     <script
       src="https://code.jquery.com/jquery-3.7.1.min.js"
