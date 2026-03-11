@@ -1,4 +1,4 @@
-const sampleInput = 'a:9:{s:2:"id";i:1254;s:6:"titulo";s:19:"ArtÌculo de prueba";s:5:"autor";a:3:{s:2:"id";i:87;s:6:"nombre";s:11:"Juan PÈrez";s:5:"email";s:16:"juan@example.com";}s:4:"tags";a:3:{i:0;s:3:"php";i:1;s:5:"mysql";i:2;s:7:"backend";}s:9:"publicado";b:1;s:17:"fecha_publicacion";s:19:"2025-12-10 18:30:00";s:12:"estadisticas";a:3:{s:7:"visitas";i:1543;s:5:"likes";i:230;s:11:"compartidos";i:54;}s:11:"comentarios";a:2:{i:0;a:3:{s:7:"usuario";s:12:"ana de armas";s:5:"texto";s:18:"Muy buen artÌculo";s:5:"fecha";s:10:"2025-12-11";}i:1;a:3:{s:7:"usuario";s:5:"pedro";s:5:"texto";s:19:"Gracias por la info";s:5:"fecha";s:10:"2025-12-12";}}s:8:"metadata";N;}';
+const sampleInput = 'a:9:{s:2:"id";i:1254;s:6:"titulo";s:19:"Art√≠culo de prueba";s:5:"autor";a:3:{s:2:"id";i:87;s:6:"nombre";s:11:"Juan P√©rez";s:5:"email";s:16:"juan@example.com";}s:4:"tags";a:3:{i:0;s:3:"php";i:1;s:5:"mysql";i:2;s:7:"backend";}s:9:"publicado";b:1;s:17:"fecha_publicacion";s:19:"2025-12-10 18:30:00";s:12:"estadisticas";a:3:{s:7:"visitas";i:1543;s:5:"likes";i:230;s:11:"compartidos";i:54;}s:11:"comentarios";a:2:{i:0;a:3:{s:7:"usuario";s:12:"ana de armas";s:5:"texto";s:18:"Muy buen art√≠culo";s:5:"fecha";s:10:"2025-12-11";}i:1;a:3:{s:7:"usuario";s:5:"pedro";s:5:"texto";s:19:"Gracias por la info";s:5:"fecha";s:10:"2025-12-12";}}s:8:"metadata";N;}';
 const encoder = new TextEncoder();
 
 const state = {
@@ -21,7 +21,7 @@ function parseSerialized(input) {
 
   function expect(char) {
     if (input[index] !== char) {
-      throw new Error(`Se esperaba "${char}" en la posiciÛn ${index}, se encontrÛ "${input[index] || "EOF"}".`);
+      throw new Error(`Se esperaba "${char}" en la posici√≥n ${index}, se encontr√≥ "${input[index] || "EOF"}".`);
     }
     index += 1;
   }
@@ -30,7 +30,7 @@ function parseSerialized(input) {
     const start = index;
     const end = input.indexOf(delimiter, start);
     if (end === -1) {
-      throw new Error(`No se encontrÛ el delimitador "${delimiter}" desde la posiciÛn ${start}.`);
+      throw new Error(`No se encontr√≥ el delimitador "${delimiter}" desde la posici√≥n ${start}.`);
     }
     index = end + delimiter.length;
     return input.slice(start, end);
@@ -40,7 +40,7 @@ function parseSerialized(input) {
     const raw = readUntil(untilChar);
     const number = Number(raw);
     if (Number.isNaN(number)) {
-      throw new Error(`N˙mero inv·lido "${raw}".`);
+      throw new Error(`N√∫mero inv√°lido "${raw}".`);
     }
     return number;
   }
@@ -67,7 +67,7 @@ function parseSerialized(input) {
     }
 
     if (consumed !== byteLength) {
-      throw new Error(`Longitud de cadena inv·lida. Esperados ${byteLength} bytes.`);
+      throw new Error(`Longitud de cadena inv√°lida. Esperados ${byteLength} bytes.`);
     }
 
     return value;
@@ -76,20 +76,20 @@ function parseSerialized(input) {
   function parseValue() {
     const type = input[index];
     if (!type) {
-      throw new Error(`Valor incompleto en la posiciÛn ${index}.`);
+      throw new Error(`Valor incompleto en la posici√≥n ${index}.`);
     }
 
     const separator = input[index + 1];
     if (type === "N") {
       if (separator !== ";") {
-        throw new Error(`Se esperaba ";" tras null en la posiciÛn ${index + 1}.`);
+        throw new Error(`Se esperaba ";" tras null en la posici√≥n ${index + 1}.`);
       }
       index += 2;
       return null;
     }
 
     if (separator !== ":") {
-      throw new Error(`Se esperaba ":" tras el tipo "${type}" en la posiciÛn ${index + 1}.`);
+      throw new Error(`Se esperaba ":" tras el tipo "${type}" en la posici√≥n ${index + 1}.`);
     }
 
     index += 2;
@@ -121,13 +121,13 @@ function parseSerialized(input) {
         return normalizePhpArray(entries);
       }
       default:
-        throw new Error(`Tipo "${type}" no soportado en la posiciÛn ${index - 2}.`);
+        throw new Error(`Tipo "${type}" no soportado en la posici√≥n ${index - 2}.`);
     }
   }
 
   const result = parseValue();
   if (index !== input.length) {
-    throw new Error(`Contenido extra sin procesar desde la posiciÛn ${index}.`);
+    throw new Error(`Contenido extra sin procesar desde la posici√≥n ${index}.`);
   }
   return result;
 }
@@ -270,7 +270,7 @@ function toTreeText(value, key = "root", depth = 0) {
 
 function renderTreeView() {
   if (state.data === null) {
-    $treeView.html('<div class="tree-empty">Convierte un array serializado para ver el ·rbol.</div>');
+    $treeView.html('<div class="tree-empty">Convierte un array serializado para ver el √°rbol.</div>');
     return;
   }
 
@@ -458,7 +458,7 @@ async function exportPdfTree() {
 
   const treeElement = document.getElementById("tree-view");
   if (!treeElement) {
-    setStatus("No se encontrÛ el visor de ·rbol.", "error");
+    setStatus("No se encontr√≥ el visor de √°rbol.", "error");
     return;
   }
 
@@ -564,7 +564,7 @@ function handleApplyEditor() {
     const parsed = JSON.parse($jsonEditor.val());
     setData(parsed, "Cambios del JSON aplicados.");
   } catch (error) {
-    setStatus(`JSON inv·lido: ${error.message}`, "error");
+    setStatus(`JSON inv√°lido: ${error.message}`, "error");
   }
 }
 
