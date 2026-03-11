@@ -11,6 +11,12 @@ const $treeView = $("#tree-view");
 const $status = $("#status-message");
 const $metricEntries = $("#metric-entries");
 const $metricDepth = $("#metric-depth");
+function applyFooterConstants() {
+  $("#footer-by-name").text(APP_CONFIG.footerByName);
+  $("#footer-link")
+    .text(APP_CONFIG.footerLinkText)
+    .attr("href", APP_CONFIG.footerLinkUrl);
+}
 
 function setStatus(message, type) {
   $status.removeClass("success error").addClass(type || "").text(message || "");
@@ -640,6 +646,7 @@ function bindEvents() {
 function init() {
   bindEvents();
   $("#copyright-year").text(String(new Date().getFullYear()));
+  applyFooterConstants();
   $serializedInput.val(sampleInput);
   handleParse();
 }
