@@ -472,6 +472,7 @@ async function exportPdfTree() {
   const originalMinHeight = treeElement.style.minHeight;
   const originalMaxHeight = treeElement.style.maxHeight;
   const originalOverflow = treeElement.style.overflow;
+  let pdfCaptureHost = null;
 
   try {
     treeElement.style.height = `${treeElement.scrollHeight}px`;
@@ -479,15 +480,54 @@ async function exportPdfTree() {
     treeElement.style.maxHeight = "none";
     treeElement.style.overflow = "visible";
 
-    const captureScale = 2;
-    const treeRect = treeElement.getBoundingClientRect();
-    const visibleLineBottomsPx = Array.from(treeElement.querySelectorAll(".tree-line"))
-      .map((node) => Math.round((node.getBoundingClientRect().bottom - treeRect.top) * captureScale))
+    // Capture from a fixed-width offscreen clone so mobile viewport width
+    // does not squeeze content before rendering to A4.
+    const A4_WIDTH_PX = 794;
+    const MAX_CANVAS_DIMENSION_PX = 16000;
+    const baseScale = 2;
+
+    pdfCaptureHost = document.createElement("div");
+    pdfCaptureHost.style.position = "fixed";
+    pdfCaptureHost.style.left = "-100000px";
+    pdfCaptureHost.style.top = "0";
+    pdfCaptureHost.style.width = `${A4_WIDTH_PX}px`;
+    pdfCaptureHost.style.padding = "0";
+    pdfCaptureHost.style.margin = "0";
+    pdfCaptureHost.style.background = "#fcfcfd";
+    pdfCaptureHost.style.zIndex = "-1";
+    pdfCaptureHost.style.pointerEvents = "none";
+    pdfCaptureHost.style.setProperty("-webkit-text-size-adjust", "none");
+    pdfCaptureHost.style.setProperty("text-size-adjust", "none");
+
+    const clonedTree = treeElement.cloneNode(true);
+    const treeComputedStyle = window.getComputedStyle(treeElement);
+    clonedTree.id = "pdf-tree-capture";
+    clonedTree.style.width = `${A4_WIDTH_PX}px`;
+    clonedTree.style.height = "auto";
+    clonedTree.style.minHeight = "auto";
+    clonedTree.style.maxHeight = "none";
+    clonedTree.style.overflow = "visible";
+    clonedTree.style.fontFamily = treeComputedStyle.fontFamily;
+    clonedTree.style.fontSize = treeComputedStyle.fontSize;
+    clonedTree.style.lineHeight = treeComputedStyle.lineHeight;
+    clonedTree.style.letterSpacing = treeComputedStyle.letterSpacing;
+    clonedTree.style.setProperty("-webkit-text-size-adjust", "none");
+    clonedTree.style.setProperty("text-size-adjust", "none");
+
+    pdfCaptureHost.appendChild(clonedTree);
+    document.body.appendChild(pdfCaptureHost);
+
+    const maxDimension = Math.max(clonedTree.scrollHeight, clonedTree.scrollWidth, 1);
+    const safeScale = Math.max(1, Math.min(baseScale, MAX_CANVAS_DIMENSION_PX / maxDimension));
+
+    const treeRect = clonedTree.getBoundingClientRect();
+    const visibleLineBottomsPx = Array.from(clonedTree.querySelectorAll(".tree-line"))
+      .map((node) => Math.round((node.getBoundingClientRect().bottom - treeRect.top) * safeScale))
       .filter((value, index, arr) => value > 0 && (index === 0 || value !== arr[index - 1]));
 
-    const canvas = await window.html2canvas(treeElement, {
+    const canvas = await window.html2canvas(clonedTree, {
       backgroundColor: "#fcfcfd",
-      scale: captureScale,
+      scale: safeScale,
       useCORS: true,
     });
 
@@ -543,6 +583,9 @@ async function exportPdfTree() {
   } catch (error) {
     setStatus(`No se pudo generar el PDF: ${error.message}`, "error");
   } finally {
+    if (pdfCaptureHost && pdfCaptureHost.parentNode) {
+      pdfCaptureHost.parentNode.removeChild(pdfCaptureHost);
+    }
     treeElement.style.height = originalHeight;
     treeElement.style.minHeight = originalMinHeight;
     treeElement.style.maxHeight = originalMaxHeight;
@@ -687,9 +730,6 @@ function init() {
 }
 
 $(init);
-
-
-
 
 
 
